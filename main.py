@@ -1,7 +1,7 @@
 import requests
 import telebot
-
-from ML import predict, get_data
+from get_data_ import get_data
+from ML import predict
 from token_and_key import token, weather_key
 
 
