@@ -2,7 +2,6 @@ import csv
 import os
 import shutil
 import warnings
-
 import bs4
 import numpy as np
 import requests
@@ -12,39 +11,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
+
 warnings.filterwarnings('ignore')
-
-
-def get_html():
-    for i in range(0, 22):
-        shutil.rmtree(f'20{str(i).zfill(2)}', ignore_errors=True)
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 YaBrowser/21.9.0.1488 Yowser/2.5 Safari/537.36'}
-    for year in range(22):
-        os.mkdir(f'DATA/20{str(year).zfill(2)}')
-        for month in range(1, 13):
-            data = requests.get(f'https://www.gismeteo.ru/diary/4368/20{str(year).zfill(2)}/{str(month)}/',
-                                headers=headers)
-            with open(f'DATA/20{str(year).zfill(2)}/20{str(year).zfill(2)}_{str(month)}.html', 'w',
-                      encoding='utf8') as f:
-                f.write(data.text)
-
-
-def get_data(inp_year, int_month, inp_day):
-    shutil.rmtree('DATA/my_data', ignore_errors=True)
-    os.mkdir('DATA/my_data')
-    with open('DATA/my_data/C0_data.csv', 'w'):
-        pass
-    for year in range(22):
-        with open(f'DATA/20{str(year).zfill(2)}/20{str(year).zfill(2)}_{str(int_month)}.html', 'r',
-                  encoding='utf8') as f:
-            soup = bs4.BeautifulSoup(f.read(), 'lxml')
-        # mass_of_temp = []
-        with open('DATA/my_data/C0_data.csv', 'a') as f:
-            writer = csv.writer(f)
-            writer.writerow([f'20{str(year).zfill(2)}', f'{str(int_month)}', str(inp_day), str(sum(
-                map(lambda x: int(x.text),
-                    soup.find_all('tr', align='center')[inp_day - 1].find_all('td', class_='first_in_group'))) / 2)])
 
 
 def choose_model(inp_year, int_month, inp_day):
@@ -98,6 +66,4 @@ def predict(inp_year, int_month, inp_day):
 
 
 if __name__ == '__main__':
-    get_html()
-    get_data()
     choose_model_and_predict()
