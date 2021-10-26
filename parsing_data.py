@@ -1,3 +1,6 @@
+import requests
+
+
 def get_html():
     for i in range(0, 22):
         shutil.rmtree(f'20{str(i).zfill(2)}', ignore_errors=True)
